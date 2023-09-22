@@ -85,9 +85,7 @@ const Cart = (props) => {
       <center>
         <p style={{ fontSize: "1.5rem" }}>
           <b>
-            {props.TotalPayment === "0"
-              ? `Total Cost : ${props.TotalPayment} Wei+${gasFee} Wei (Est gas fee)`
-              : `Your Cart Is Empty! Buy Some NFT's`}
+            Total Cost : {props.TotalPayment} Wei+{gasFee} Wei (Est gas fee)
           </b>
         </p>
       </center>
