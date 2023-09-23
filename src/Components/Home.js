@@ -67,7 +67,7 @@ const Home = (props) => {
               setPop(false);
               setPop3(false);
             }}>
-            UPLOAD NFT
+            MINT NFT
           </a>
           <a
             onClick={() => {

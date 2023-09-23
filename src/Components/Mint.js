@@ -90,7 +90,7 @@ const Mint = (props) => {
         <div className='upload-form'>
           <center>
             <b>
-              <h3>UPLOAD NFT</h3>
+              <h3>MINT NFT</h3>
             </b>
             <br />
             {fileType === "video" ? (
