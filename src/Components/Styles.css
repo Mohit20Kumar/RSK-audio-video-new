@@ -18,31 +18,31 @@
   border-radius: 4px;
 }
 .header-right a {
-  background-color: rgb(255, 255, 255);
+  /* background-color: rgb(255, 255, 255); */
+  letter-spacing: 2px;
   margin-left: 10px;
+  color: white !important;
+  transition: 0.5s linear;
 }
 
 .header-right a:hover {
-  background-color: black;
-  color: white;
+  background-color: white;
+  color: purple !important;
 }
 
 .header a.logo {
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
+  padding: 1rem;
+  transition: 0.5s linear;
 }
 
-.header a:hover {
-  color: black;
+.header a.logo:hover {
   background-color: white;
+  color: purple !important;
 }
 
-.header a.active {
-  background-color: rgb(255, 255, 255);
-  color: blue;
-}
-
-.header-right {
+.header .header-right {
   float: right;
 }
 .header-right a {

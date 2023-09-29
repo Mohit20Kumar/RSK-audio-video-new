@@ -58,19 +58,33 @@ const Cart = (props) => {
   return props.trigger ? (
     <div className='outer'>
       <h3>MY CART</h3>
+      {console.log(props.items)}
       <div className='inner'>
         {props.items &&
           Object.entries(props.items).map(
-            ([ProductID, [nftname, videoUrl, price]], index) => (
+            ([ProductID, [nftname, videoUrl, price, contentType]], index) => (
               <div className='Productitem' key={index}>
+                {console.log("type : ", contentType)}
                 <div className='productbody'>
                   <center>
-                    <video
-                      src={videoUrl}
-                      width='400px'
-                      height='300px'
-                      alt='Product'
-                    />
+                    {contentType.charAt(0) == "v" ? (
+                      <video
+                        className='video-box'
+                        src={videoUrl}
+                        width='400px'
+                        height='300px'
+                        alt='Product'
+                      />
+                    ) : (
+                      <>
+                        <img
+                          src='https://img.freepik.com/premium-vector/sound-wave-with-imitation-sound-audio-identification-technology_106065-64.jpg'
+                          width='400px'
+                          height='300px'
+                          alt='Audio File'
+                        />
+                      </>
+                    )}
                     <p className='nft-name'>{nftname}</p>
                     <p>
                       <b>Price: {price} Wei</b>
@@ -83,9 +97,9 @@ const Cart = (props) => {
       </div>
       <br />
       <center>
-        <p style={{ fontSize: "1.5rem" }}>
+        <p style={{ fontSize: "1.5rem", color: "white" }}>
           <b>
-            Total Cost : {props.TotalPayment} Wei+{gasFee} Wei (Est gas fee)
+            Total Cost : {props.TotalPayment} Wei +{gasFee} Wei (Est gas fee)
           </b>
         </p>
       </center>
@@ -94,13 +108,15 @@ const Cart = (props) => {
           onClick={(e) => {
             handlePayment(e, props.TotalPayment);
           }}
-          class='btn btn-dark'>
+          className='btn btn-light'>
           PAY
         </button>
       </center>
       <br />
       <center>
-        <button onClick={() => props.setTrigger(false)} class='btn btn-danger'>
+        <button
+          onClick={() => props.setTrigger(false)}
+          className='btn btn-danger'>
           Live NFT
         </button>
       </center>

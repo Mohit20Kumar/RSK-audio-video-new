@@ -9,6 +9,7 @@ const Mint = (props) => {
   const [uploadStatus, setUploadStatus] = useState();
   const [MintStatus, setMintStatus] = useState();
   const [fileType, setFileType] = useState(""); // Added to track file type (image or video)
+  const [audioFile, setAudioFile] = useState(null);
 
   useEffect(() => {
     const handler = async (e) => {
@@ -28,11 +29,18 @@ const Mint = (props) => {
           },
         });
         const fileExtension = file.name.split(".").pop().toLowerCase();
+        //const supportedImageFormats = ['jpg','png'];
         const supportedVideoFormats = ["mp4"]; // Add more video formats if needed
+        const supportedAudioFormats = ["mp3"];
 
         // Determine file type
+        //if (supportedImageFormats.includes(fileExtension)) {
+        //setFileType('image');
+        //} else
         if (supportedVideoFormats.includes(fileExtension)) {
           setFileType("video");
+        } else if (supportedAudioFormats.includes(fileExtension)) {
+          setFileType("audio");
         } else {
           setFileType("unknown");
         }
@@ -52,8 +60,9 @@ const Mint = (props) => {
   const onchangeHandler = async (e) => {
     const data = e.target.files[0];
     const reader = new window.FileReader();
-    reader.readAsArrayBuffer(data);
+    reader.readAsDataURL(data); // Read the file as a data URL
     reader.onloadend = () => {
+      setAudioFile(reader.result); // Set the audioFile state with the data URL
       setFile(e.target.files[0]);
     };
   };
@@ -89,15 +98,18 @@ const Mint = (props) => {
       <center>
         <div className='upload-form'>
           <center>
-            <b>
-              <h3>MINT NFT</h3>
-            </b>
+            <h4 style={{ fontWeight: "bold" }}>UPLOAD NFT</h4>
             <br />
             {fileType === "video" ? (
-              <video width='200' height='200'>
-                <source src={fileLink} type='video/mp4' />
+              <video width='200' height='200' controls>
+                <source src={fileLink} type='video/webm' />
                 Your browser does not support the video tag.
               </video>
+            ) : fileType === "audio" ? (
+              <audio controls>
+                <source src={audioFile} type='audio/mp3' />
+                Your browser does not support the audio tag.
+              </audio>
             ) : (
               <p>File</p>
             )}
@@ -126,7 +138,7 @@ const Mint = (props) => {
                 type='file'
                 onChange={onchangeHandler}
                 id='fl'
-                accept='.mp4'
+                accept='.mp3,.mp4'
                 className='form-control'
               />
               <br />
