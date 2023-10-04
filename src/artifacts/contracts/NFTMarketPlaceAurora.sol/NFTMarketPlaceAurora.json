@@ -205,6 +205,19 @@
       "inputs": [
         {
           "internalType": "uint256",
+          "name": "Productid",
+          "type": "uint256"
+        }
+      ],
+      "name": "PayToUnlock",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
           "name": "productid",
           "type": "uint256"
         },
@@ -352,6 +365,30 @@
         }
       ],
       "name": "isApprovedForAll",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "isNFTUnlocked",
       "outputs": [
         {
           "internalType": "bool",
@@ -535,6 +572,19 @@
       "name": "transferFrom",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "unlockPrice",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     }
   ],

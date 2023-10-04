@@ -3,7 +3,13 @@ import "./Styles.css";
 import Cart from "./Cart";
 import Mint from "./Mint";
 import MyProducts from "./MyProducts";
+import Web3 from "web3";
+import { ethers } from "ethers";
+import ReactPlayer from "react-player";
+import Plyr from "plyr-react";
+
 const Home = (props) => {
+  const [unlockStatus, setUnlockStatus] = useState({});
   const [items, setItems] = useState({});
   const [total, setTotal] = useState(0);
   const [pop, setPop] = useState(false);
@@ -23,6 +29,12 @@ const Home = (props) => {
         console.log(data);
         for (let i = 0; i < data.length; i++) {
           const ProductID = data[i][0].toString();
+          const isUnlocked = await isNFTUnlocked(ProductID);
+
+          setUnlockStatus((prevUnlockStatus) => ({
+            ...prevUnlockStatus,
+            [ProductID]: isUnlocked,
+          }));
           const videoUrl = data[i][1];
           const seller = data[i][3];
           const price = data[i][4].toString();
@@ -58,6 +70,62 @@ const Home = (props) => {
     }));
     setTotal(total + parseInt(price));
   };
+  const handleUnlockClick = async (ProductID) => {
+    try {
+      // Check if the user has already unlocked this NFT
+      // if (product[ProductID][3] === true) {
+      //   alert("You have already unlocked this NFT");
+      //   return;
+      // }
+
+      // Set a fixed price of 0.00001 Ether to unlock the NFT
+      const unlockPrice = "0.00001";
+
+      // Make a call to your smart contract to pay and unlock the NFT
+      await props.contract.PayToUnlock(ProductID, {
+        value: Web3.utils.toWei(unlockPrice, "ether"), // Convert Ether to Wei
+      });
+
+      // Update the state to mark the NFT as unlocked
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [ProductID]: [
+          prevProduct[ProductID][0], // NFT name
+          prevProduct[ProductID][1], // Video URL
+          prevProduct[ProductID][2], // Price
+          true, // Mark as unlocked
+          prevProduct[ProductID][4], // Seller
+          prevProduct[ProductID][5], // ContentType
+        ],
+      }));
+
+      alert("NFT unlocked!");
+    } catch (error) {
+      console.error("Error unlocking NFT:", error);
+      alert("Error unlocking NFT. Please try again.");
+    }
+  };
+
+  async function isNFTUnlocked(ProductID) {
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const unlockStatus = await props.contract.isNFTUnlocked(
+        ProductID,
+        signer.getAddress()
+      );
+      console.log("unlock status :", unlockStatus);
+      return unlockStatus;
+    } catch (error) {
+      console.error("Error checking unlock status:", error);
+      return false; // Handle error
+    }
+  }
+
+  function isUnlocked(ProductID) {
+    isNFTUnlocked(ProductID);
+  }
+
   return (
     <div>
       <div className='header'>
@@ -137,8 +205,46 @@ const Home = (props) => {
                     <div className='Productitem' key={index}>
                       {/* {console.log("Type : ", contentType)} */}
                       <div className='productbody'>
-                        {contentType.charAt(0) == "v" ? (
+                        {console.log("vid:", videoUrl)}
+                        {unlockStatus[ProductID] ? (
+                          // NFT is unlocked, render video/audio player
+                          contentType.charAt(0) === "v" ? (
+                            <video
+                              // className='video-box'
+                              src={videoUrl}
+                              width='400px'
+                              height='300px'
+                              alt='Product'
+                            />
+                          ) : (
+                            <>
+                              <img
+                                src='https://img.freepik.com/premium-vector/sound-wave-with-imitation-sound-audio-identification-technology_106065-64.jpg'
+                                width='400px'
+                                height='300px'
+                                alt='Audio File'
+                              />
+                              <audio
+                                controls
+                                className='audio-box'
+                                src={videoUrl}
+                                alt='Product'
+                              />
+                            </>
+                          )
+                        ) : (
+                          // NFT is locked, display locked content or a message
+                          <img
+                            src='https://www.pngall.com/wp-content/uploads/10/Lock-Transparent-Images.png'
+                            width='400px'
+                            height='300px'
+                            alt='Locked NFT'
+                          />
+                        )}
+
+                        {/* {contentType.charAt(0) == "v" ? (
                           <video
+                            onClick={() => console.log(ProductID)}
                             className='video-box'
                             src={videoUrl}
                             width='400px'
@@ -148,13 +254,14 @@ const Home = (props) => {
                         ) : (
                           <>
                             <img
+                              onClick={() => console.log(ProductID)}
                               src='https://img.freepik.com/premium-vector/sound-wave-with-imitation-sound-audio-identification-technology_106065-64.jpg'
                               width='400px'
                               height='300px'
                               alt='Audio File'
                             />
                           </>
-                        )}
+                        )} */}
 
                         <p className='nft-name'>{nftname}</p>
                         {/* <p className='nft-name'>{contentType}</p> */}
@@ -179,6 +286,17 @@ const Home = (props) => {
                           class='btn btn-dark'>
                           BUY
                         </button>
+                        {unlockStatus[ProductID] ? (
+                          "UNLOCKED!!"
+                        ) : (
+                          <button
+                            onClick={() => {
+                              handleUnlockClick(ProductID); // Call the function to unlock
+                            }}
+                            className='btn btn-warning'>
+                            UNLOCK
+                          </button>
+                        )}
                       </div>
                     </div>
                   </>

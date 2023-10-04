@@ -107,6 +107,11 @@
   /* box-sizing: border-box; */
 }
 
+.lol {
+  height: 300px;
+  width: 400px;
+}
+
 .productbody {
   display: flex;
   flex-direction: column;
