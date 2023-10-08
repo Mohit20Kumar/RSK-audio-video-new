@@ -82,10 +82,11 @@ const Home = (props) => {
       const unlockPrice = "0.00001";
 
       // Make a call to your smart contract to pay and unlock the NFT
-      await props.contract.PayToUnlock(ProductID, {
+      const tx = await props.contract.PayToUnlock(ProductID, {
         value: Web3.utils.toWei(unlockPrice, "ether"), // Convert Ether to Wei
       });
-
+      await tx.wait();
+      // console.log("tx", tx);
       // Update the state to mark the NFT as unlocked
       setProduct((prevProduct) => ({
         ...prevProduct,
@@ -99,7 +100,7 @@ const Home = (props) => {
         ],
       }));
 
-      alert("NFT unlocked!");
+      alert("NFT unlocked!, please reload");
     } catch (error) {
       console.error("Error unlocking NFT:", error);
       alert("Error unlocking NFT. Please try again.");
@@ -215,6 +216,7 @@ const Home = (props) => {
                               width='400px'
                               height='300px'
                               alt='Product'
+                              controls
                             />
                           ) : (
                             <>
@@ -272,20 +274,25 @@ const Home = (props) => {
                         <p>
                           <b>Price: {price} Wei</b>
                         </p>
-                        <button
-                          onClick={() => {
-                            handleBuyClick(
-                              nftname,
-                              price,
-                              videoUrl,
-                              ProductID,
-                              contentType
-                            );
-                            alert("Added to Cart");
-                          }}
-                          class='btn btn-dark'>
-                          BUY
-                        </button>
+
+                        {unlockStatus[ProductID] ? (
+                          <button
+                            onClick={() => {
+                              handleBuyClick(
+                                nftname,
+                                price,
+                                videoUrl,
+                                ProductID,
+                                contentType
+                              );
+                              alert("Added to Cart");
+                            }}
+                            class='btn btn-dark'>
+                            BUY
+                          </button>
+                        ) : (
+                          ""
+                        )}
                         {unlockStatus[ProductID] ? (
                           "UNLOCKED!!"
                         ) : (

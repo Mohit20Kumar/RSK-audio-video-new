@@ -66,30 +66,37 @@ const Cart = (props) => {
               <div className='Productitem' key={index}>
                 {console.log("type : ", contentType)}
                 <div className='productbody'>
-                  <center>
-                    {contentType.charAt(0) == "v" ? (
-                      <video
-                        className='video-box'
-                        src={videoUrl}
+                  {/* <center> */}
+                  {contentType.charAt(0) == "v" ? (
+                    <video
+                      controls
+                      className='video-box'
+                      src={videoUrl}
+                      width='400px'
+                      height='300px'
+                      alt='Product'
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src='https://img.freepik.com/premium-vector/sound-wave-with-imitation-sound-audio-identification-technology_106065-64.jpg'
                         width='400px'
                         height='300px'
+                        alt='Audio File'
+                      />
+                      <audio
+                        controls
+                        className='audio-box'
+                        src={videoUrl}
                         alt='Product'
                       />
-                    ) : (
-                      <>
-                        <img
-                          src='https://img.freepik.com/premium-vector/sound-wave-with-imitation-sound-audio-identification-technology_106065-64.jpg'
-                          width='400px'
-                          height='300px'
-                          alt='Audio File'
-                        />
-                      </>
-                    )}
-                    <p className='nft-name'>{nftname}</p>
-                    <p>
-                      <b>Price: {price} Wei</b>
-                    </p>
-                  </center>
+                    </>
+                  )}
+                  <p className='nft-name'>{nftname}</p>
+                  <p>
+                    <b>Price: {price} Wei</b>
+                  </p>
+                  {/* </center> */}
                 </div>
               </div>
             )

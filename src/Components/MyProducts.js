@@ -73,6 +73,7 @@ const MyProducts = (props) => {
                         width='400px'
                         height='300px'
                         alt='Product'
+                        controls
                       />
                     ) : (
                       <>
